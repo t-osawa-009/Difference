@@ -1,23 +1,23 @@
 import Foundation
 
-public class DifferenceWrapper<CollectionType> where CollectionType: Hashable {
-    private var differenceChange: DifferenceChange<AnyCollection<CollectionType>>?
+public class DifferenceWrapper<CollectionType> where CollectionType: Hashable, CollectionType: RandomAccessCollection, CollectionType.Element: Hashable {
+    private var differenceChange: DifferenceChange<CollectionType>?
     public init() {}
     
-    private var block: ((DifferenceChange<AnyCollection<CollectionType>>) -> Void)?
-    public func notifity(block: ((DifferenceChange<AnyCollection<CollectionType>>) -> Void)?) {
+    private var block: ((DifferenceChange<CollectionType>) -> Void)?
+    public func notifity(block: ((DifferenceChange<CollectionType>) -> Void)?) {
         self.block = block
     }
     
     @discardableResult
-    public func diff(other: AnyCollection<CollectionType>) -> DifferenceChange<AnyCollection<CollectionType>> {
+    public func diff(other: CollectionType) -> DifferenceChange<CollectionType> {
         if let differenceChange = differenceChange {
             switch differenceChange {
             case .initial(let array), .update(let array, deletions: _, insertions: _, moves: _):
-                let newArray = other.map({ $0 })
-                let oldArray = array.map({ $0 })
+                let newArray = other
+                let oldArray = array
                 let changes = newArray.difference(from: oldArray)
-            
+                
                 // https://www.swiftjectivec.com/collectiondifference/
                 let insertions = changes
                     .inferringMoves()
@@ -32,7 +32,7 @@ public class DifferenceWrapper<CollectionType> where CollectionType: Hashable {
                     .inferringMoves()
                     .compactMap { change -> Int? in
                         guard case let .remove(offset, _, move) = change,
-                        move == nil
+                              move == nil
                         else { return nil }
                         return offset
                     }
@@ -50,15 +50,16 @@ public class DifferenceWrapper<CollectionType> where CollectionType: Hashable {
                         }
                     }
                 
-                let result: DifferenceChange<AnyCollection<CollectionType>> = .update(other,
-                                                                                      deletions: deletions,
-                                                                                      insertions: insertions,
-                                                                                      moves: moves)
+                let result: DifferenceChange<CollectionType> = .update(other,
+                                                                       deletions: deletions,
+                                                                       insertions: insertions,
+                                                                       moves: moves)
+                self.differenceChange = result
                 block?(result)
                 return result
             }
         } else {
-            let result: DifferenceChange<AnyCollection<CollectionType>> = .initial(other)
+            let result: DifferenceChange<CollectionType> = .initial(other)
             self.differenceChange = result
             block?(result)
             return result

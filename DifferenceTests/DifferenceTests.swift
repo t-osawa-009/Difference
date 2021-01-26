@@ -2,8 +2,24 @@ import XCTest
 @testable import Difference
 
 final class DifferenceTests: XCTestCase {
+    func testNotifity() {
+        let differenceWrapper = DifferenceWrapper<[Int]>()
+        let array = [1]
+        let array2 = [1, 3, 5, 7]
+        differenceWrapper.notifity { (result) in
+            switch result {
+            case .initial(let element):
+                XCTAssertEqual(element, array)
+            case .update(let element, deletions: _, insertions: _, moves: _):
+                XCTAssertEqual(element.map({ $0 }), array2)
+            }
+        }
+        differenceWrapper.diff(other: .init(array))
+        differenceWrapper.diff(other: .init(array2))
+    }
+    
     func testInitial() {
-        let differenceWrapper = DifferenceWrapper<Int>()
+        let differenceWrapper = DifferenceWrapper<[Int]>()
         let array = [1]
         differenceWrapper.notifity { (result) in
             switch result {
@@ -16,7 +32,7 @@ final class DifferenceTests: XCTestCase {
     }
     
     func testMoves() {
-        let differenceWrapper = DifferenceWrapper<Int>()
+        let differenceWrapper = DifferenceWrapper<[Int]>()
         differenceWrapper.notifity { (result) in
             switch result {
             case .update(_, deletions: let deletions, insertions: let insertions, moves: let moves):
@@ -33,7 +49,7 @@ final class DifferenceTests: XCTestCase {
     }
     
     func testDeletions() {
-        let differenceWrapper = DifferenceWrapper<Int>()
+        let differenceWrapper = DifferenceWrapper<[Int]>()
         differenceWrapper.notifity { (result) in
             switch result {
             case .update(_, deletions: let deletions, insertions: let insertions, moves: let moves):
@@ -50,7 +66,7 @@ final class DifferenceTests: XCTestCase {
     }
     
     func testInsertions() {
-        let differenceWrapper = DifferenceWrapper<Int>()
+        let differenceWrapper = DifferenceWrapper<[Int]>()
         differenceWrapper.notifity { (result) in
             switch result {
             case .update(_, deletions: let deletions, insertions: let insertions, moves: let moves):

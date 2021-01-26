@@ -16,8 +16,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5uw-ZP-3WF">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="irv-ML-DjY">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HbR-66-fS0">
+                                                <rect key="frame" x="0.0" y="0.0" width="207" height="44"/>
+                                                <state key="normal" title="Button"/>
+                                                <connections>
+                                                    <action selector="addButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MRE-OK-3vh"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r45-Fh-jr6">
+                                                <rect key="frame" x="207" y="0.0" width="207" height="44"/>
+                                                <state key="normal" title="Button"/>
+                                                <connections>
+                                                    <action selector="removeButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aHK-os-oaO"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="irv-ML-DjY" secondAttribute="trailing" id="4Qu-Vz-veT"/>
+                                    <constraint firstAttribute="height" constant="44" id="AHJ-Te-aAH"/>
+                                    <constraint firstItem="irv-ML-DjY" firstAttribute="leading" secondItem="5uw-ZP-3WF" secondAttribute="leading" id="M8M-OU-RQF"/>
+                                    <constraint firstAttribute="bottom" secondItem="irv-ML-DjY" secondAttribute="bottom" id="eFg-yz-9MF"/>
+                                    <constraint firstItem="irv-ML-DjY" firstAttribute="top" secondItem="5uw-ZP-3WF" secondAttribute="top" id="heI-ID-5Gj"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="keH-MC-XBK">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="132" width="414" height="730"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -25,9 +57,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="keH-MC-XBK" secondAttribute="bottom" id="FEM-Ao-vJJ"/>
-                            <constraint firstItem="keH-MC-XBK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="bNe-OC-Rog"/>
+                            <constraint firstItem="5uw-ZP-3WF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="bCN-SR-hXi"/>
+                            <constraint firstItem="keH-MC-XBK" firstAttribute="top" secondItem="5uw-ZP-3WF" secondAttribute="bottom" id="e5r-sT-yBx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5uw-ZP-3WF" secondAttribute="trailing" id="gSZ-in-Lhx"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="keH-MC-XBK" secondAttribute="trailing" id="hNy-95-LCJ"/>
                             <constraint firstItem="keH-MC-XBK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="s59-LF-Vxl"/>
+                            <constraint firstItem="5uw-ZP-3WF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="uP5-Gw-8Qd"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LNl-To-2xB"/>
