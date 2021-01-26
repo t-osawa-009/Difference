@@ -17,7 +17,7 @@ public class DifferenceWrapper<CollectionType> where CollectionType: Hashable, C
                 let newArray = other
                 let oldArray = array
                 let changes = newArray.difference(from: oldArray)
-                
+
                 // https://www.swiftjectivec.com/collectiondifference/
                 let insertions = changes
                     .inferringMoves()
