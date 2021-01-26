@@ -18,6 +18,18 @@ final class DifferenceTests: XCTestCase {
         differenceWrapper.diff(other: .init(array2))
     }
     
+    func testNotificationToken() {
+        let differenceWrapper = DifferenceWrapper<[Int]>()
+        XCTAssertTrue(differenceWrapper.callBackDictionary.isEmpty)
+        let token = differenceWrapper.notifity { (_) in
+            
+        }
+        XCTAssertEqual(differenceWrapper.callBackDictionary.count, 1)
+        
+        differenceWrapper.remove(token: token)
+        XCTAssertTrue(differenceWrapper.callBackDictionary.isEmpty)
+    }
+    
     func testInitial() {
         let differenceWrapper = DifferenceWrapper<[Int]>()
         let array = [1]

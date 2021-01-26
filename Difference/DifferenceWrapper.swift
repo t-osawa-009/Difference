@@ -1,12 +1,34 @@
 import Foundation
 
+public class DifferenceWrapperNotificationToken {
+    let key: String
+    init(key: String) {
+        self.key = key
+    }
+}
+
 public class DifferenceWrapper<CollectionType> where CollectionType: Hashable, CollectionType: RandomAccessCollection, CollectionType.Element: Hashable {
     private var differenceChange: DifferenceChange<CollectionType>?
     public init() {}
     
     private var block: ((DifferenceChange<CollectionType>) -> Void)?
-    public func notifity(block: ((DifferenceChange<CollectionType>) -> Void)?) {
-        self.block = block
+    private(set) var callBackDictionary: [String: ((DifferenceChange<CollectionType>) -> Void)] = [:]
+    private let locker = NSRecursiveLock()
+    
+    @discardableResult
+    public func notifity(block: ((DifferenceChange<CollectionType>) -> Void)?) -> DifferenceWrapperNotificationToken {
+        locker.lock()
+        defer { locker.unlock() }
+        let key = UUID().uuidString
+        let token = DifferenceWrapperNotificationToken(key: key)
+        callBackDictionary[key] = block
+        return token
+    }
+    
+    public func remove(token: DifferenceWrapperNotificationToken) {
+        locker.lock()
+        defer { locker.unlock() }
+        callBackDictionary.removeValue(forKey: token.key)
     }
     
     @discardableResult
@@ -17,7 +39,7 @@ public class DifferenceWrapper<CollectionType> where CollectionType: Hashable, C
                 let newArray = other
                 let oldArray = array
                 let changes = newArray.difference(from: oldArray)
-
+                
                 // https://www.swiftjectivec.com/collectiondifference/
                 let insertions = changes
                     .inferringMoves()
@@ -55,14 +77,23 @@ public class DifferenceWrapper<CollectionType> where CollectionType: Hashable, C
                                                                        insertions: insertions,
                                                                        moves: moves)
                 self.differenceChange = result
-                block?(result)
+                dispatch(result)
                 return result
             }
         } else {
             let result: DifferenceChange<CollectionType> = .initial(other)
             self.differenceChange = result
-            block?(result)
+            dispatch(result)
             return result
+        }
+    }
+    
+    private func dispatch(_ result: DifferenceChange<CollectionType>) {
+        locker.lock()
+        defer { locker.unlock() }
+        
+        callBackDictionary.forEach { (_, callBack) in
+            callBack(result)
         }
     }
 }
